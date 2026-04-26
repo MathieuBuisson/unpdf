@@ -74,7 +74,8 @@ unpdf/
 │   └── runner.py                # Batch orchestration and statistics
 ├── tests/                       # Test suite
 ├── pyproject.toml               # Project configuration
-└── README.md
+├── AGENTS.md                   # Onboarding guide for AI agents
+└── README.md                    # User documentation
 ```
 
 ## Testing
