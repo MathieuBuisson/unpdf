@@ -1,0 +1,15 @@
+[project]
+name = "unpdf"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "pymupdf4llm",
+]
+
+[project.scripts]
+unpdf = "unpdf.__main__:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
