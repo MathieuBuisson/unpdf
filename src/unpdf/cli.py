@@ -6,15 +6,14 @@ from pathlib import Path
 from . import __version__
 from .runner import run_batch
 
-logger = logging.getLogger(__name__)
 
-
-def setup_logging():
+def setup_logging() -> logging.Logger:
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s",
         stream=sys.stdout,
     )
+    return logging.getLogger("unpdf")
 
 
 def main() -> int:
@@ -40,7 +39,7 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    setup_logging()
+    logger = setup_logging()
 
     input_path = Path(args.INPUT).resolve()
     output_dir = Path(args.DIR).resolve()
@@ -50,15 +49,11 @@ def main() -> int:
         return 1
 
     if input_path.is_dir() and args.recurse:
-        # Check if output directory is inside input directory
-        try:
-            output_dir.relative_to(input_path)
+        if output_dir.is_relative_to(input_path):
             logger.error(
                 "Output directory must not be inside the input directory when using --recurse."
             )
             return 1
-        except ValueError:
-            pass  # Output directory is not inside input directory
 
     try:
         run_batch(input_path, output_dir, args.recurse, args.force)
@@ -66,7 +61,3 @@ def main() -> int:
     except Exception as e:
         logger.error(f"Fatal error during batch processing: {e}")
         return 1
-
-
-if __name__ == "__main__":
-    sys.exit(main())
