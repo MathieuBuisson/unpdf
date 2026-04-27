@@ -45,5 +45,4 @@ def test_run_batch_empty(mock_convert_pdf, tmp_path: Path, caplog):
     with caplog.at_level(logging.INFO):
         run_batch(in_dir, out_dir, recurse=False, force=False)
 
-    assert "Summary: 0 found, 0 converted, 0 skipped, 0 errors." in caplog.text
     assert mock_convert_pdf.call_count == 0

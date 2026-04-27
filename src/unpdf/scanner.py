@@ -4,9 +4,14 @@ from typing import Iterator
 
 def scan_folder(input_path: Path, recurse: bool) -> Iterator[Path]:
     """
-    Yields PDF files in the given path.
-    If input_path is a file, yields it if it's a PDF.
-    If input_path is a directory, yields PDFs based on recurse flag.
+    Scans for PDF files in the given path.
+
+    Args:
+        input_path: Path to a PDF file or directory containing PDFs.
+        recurse: If True, scan subdirectories recursively.
+
+    Yields:
+        Path objects for each PDF file found.
     """
     if input_path.is_file():
         if input_path.suffix.lower() == ".pdf":
@@ -35,7 +40,7 @@ def get_output_path(input_file: Path, input_root: Path, output_dir: Path) -> Pat
     try:
         relative_path = input_file.relative_to(input_root)
     except ValueError:
-        # Fallback if somehow not relative
+        # Defensive fallback - handles edge cases like symlinks or race conditions
         relative_path = Path(input_file.name)
 
     return output_dir / relative_path.with_suffix(".md")
