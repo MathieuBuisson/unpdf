@@ -73,8 +73,11 @@ unpdf/
 │   ├── converter.py             # Single-file PDF→Markdown conversion
 │   └── runner.py                # Batch orchestration and statistics
 ├── tests/                       # Test suite
-├── pyproject.toml               # Project configuration
-├── AGENTS.md                   # Onboarding guide for AI agents
+│   ├── test_scanner.py
+│   ├── test_converter.py
+│   └── test_runner.py
+├── pyproject.toml               # Centralized configuration
+├── SPEC.md                      # Technical specifications
 └── README.md                    # User documentation
 ```
 

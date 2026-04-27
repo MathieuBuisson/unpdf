@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Iterator
 
+
 def scan_folder(input_path: Path, recurse: bool) -> Iterator[Path]:
     """
     Yields PDF files in the given path.
@@ -21,6 +22,7 @@ def scan_folder(input_path: Path, recurse: bool) -> Iterator[Path]:
             if p.is_file() and p.suffix.lower() == ".pdf":
                 yield p
 
+
 def get_output_path(input_file: Path, input_root: Path, output_dir: Path) -> Path:
     """
     Computes the output Markdown path preserving relative structure.
@@ -35,5 +37,5 @@ def get_output_path(input_file: Path, input_root: Path, output_dir: Path) -> Pat
     except ValueError:
         # Fallback if somehow not relative
         relative_path = Path(input_file.name)
-        
+
     return output_dir / relative_path.with_suffix(".md")
