@@ -1,10 +1,11 @@
 import logging
 from enum import Enum
 from pathlib import Path
-import pymupdf4llm
-import fitz
 
-logger = logging.getLogger(__name__)
+import pymupdf
+import pymupdf4llm
+
+logger = logging.getLogger("unpdf")
 
 
 class ConversionResult(Enum):
@@ -25,19 +26,12 @@ def convert_pdf(
         )
         return ConversionResult.SKIPPED
 
-    try:
-        # Check if the PDF is password protected or corrupt
-        try:
-            doc = fitz.open(input_file)
-            if doc.needs_pass:
-                doc.close()
-                logger.warning(f"Skipping encrypted PDF: {input_file.name}")
-                return ConversionResult.SKIPPED
-            doc.close()
-        except Exception as e:
-            logger.warning(f"Skipping corrupt or unreadable PDF: {input_file.name}")
-            return ConversionResult.SKIPPED
+    doc = pymupdf.Document(str(input_file))
+    if doc.is_encrypted:
+        logger.warning(f"Skipping encrypted PDF: {input_file.name}")
+        return ConversionResult.SKIPPED
 
+    try:
         # Convert to Markdown
         md_text = pymupdf4llm.to_markdown(str(input_file))
 
