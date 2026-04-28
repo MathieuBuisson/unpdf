@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "unpdf"
-version = "0.1.0"
+dynamic = ["version"]
 requires-python = ">=3.13"
 dependencies = [
     "pymupdf4llm",
@@ -17,6 +17,9 @@ unpdf = "unpdf.cli:main"
 dev = [
     "pytest",
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "unpdf.__version__"}
 
 [tool.black]
 line-length = 88

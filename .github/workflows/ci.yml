@@ -29,8 +29,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest black bandit mypy pyinstaller
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install pytest black bandit mypy
+        pip install -r requirements.txt
 
     - name: Check code style with Black
       run: black src/ tests/ --check
@@ -44,6 +44,28 @@ jobs:
     - name: Test with pytest
       run: pytest
 
+  package-and-release:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required for creating releases
+      actions: write   # Required for uploading release assets
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
     - name: Package into a standalone executable
       run: |
         pyinstaller \
@@ -53,3 +75,18 @@ jobs:
             --collect-all pymupdf \
             --name ${{ env.APP_NAME }} \
             src/unpdf/__main__.py
+
+    - name: Increment version
+      uses: saleweaver/version_increment_action@v1
+      with:
+        file_path: "src/unpdf/__init__.py"
+        version_key: "__version__"
+
+    - name: Create a release
+      if: env.new_version != ''
+      uses: softprops/action-gh-release@v3
+      with:
+        files: dist/${{ env.APP_NAME }}.exe
+        tag_name: "v${{ env.new_version }}"
+        name: "v${{ env.new_version }}"
+        generate_release_notes: true
