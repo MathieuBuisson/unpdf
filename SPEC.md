@@ -45,7 +45,7 @@ dependencies = [
 ]
 
 [project.scripts]
-unpdf = "unpdf.__main__:main"
+unpdf = "unpdf.cli:main"
 
 [project.optional-dependencies]
 dev = [
