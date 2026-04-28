@@ -86,7 +86,7 @@ jobs:
       if: env.new_version != ''
       uses: softprops/action-gh-release@v3
       with:
-        files: dist/${{ env.APP_NAME }}.exe
-        tag_name: "v${{ env.new_version }}"
-        name: "v${{ env.new_version }}"
+        files: dist/*
+        tag_name: v${{ env.new_version }}
+        name: v${{ env.new_version }}
         generate_release_notes: true
