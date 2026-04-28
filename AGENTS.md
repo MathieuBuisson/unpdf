@@ -30,6 +30,7 @@ unpdf/
 │   ├── converter.py             # Single-file PDF→Markdown conversion
 │   └── runner.py                # Batch orchestration and statistics
 ├── tests/                       # Test suite
+│   ├── test_cli.py
 │   ├── test_scanner.py
 │   ├── test_converter.py
 │   └── test_runner.py
@@ -44,6 +45,7 @@ unpdf/
 - **Python 3.13+** features (like modern `pathlib` and type hinting) are used throughout.
 - All core logic is covered by unit tests in the `tests/` directory.
 - Formatting and testing configurations are managed via `pyproject.toml`.
+- Use `black`, `mypy`, and `bandit` to validate code before committing.
 - Validation should prioritize correctness of path mappings and error handling during batch runs.
 
 ## Search guidance

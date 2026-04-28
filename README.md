@@ -73,6 +73,7 @@ unpdf/
 │   ├── converter.py             # Single-file PDF→Markdown conversion
 │   └── runner.py                # Batch orchestration and statistics
 ├── tests/                       # Test suite
+│   ├── test_cli.py
 │   ├── test_scanner.py
 │   ├── test_converter.py
 │   └── test_runner.py
@@ -88,6 +89,20 @@ Run the test suite using `pytest`:
 ```bash
 pytest tests/
 ```
+
+## Code Quality
+
+This project uses several tools to maintain code quality:
+
+```bash
+black src/ tests/          # Format code
+mypy src/ tests/          # Type checking
+bandit -r src/ tests/      # Security analysis
+```
+
+## CI/CD
+
+GitHub Actions automatically runs tests and linting on push and pull requests.
 
 ## Packaging
 
