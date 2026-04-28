@@ -8,21 +8,28 @@ from .runner import run_batch
 
 
 def setup_logging() -> logging.Logger:
+    """Configure root logging to stdout at INFO level."""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s",
         stream=sys.stdout,
+        force=True,
     )
     return logging.getLogger("unpdf")
 
 
 def main() -> int:
+    """Parse arguments, validate inputs, and run the batch conversion. Returns exit code."""
     parser = argparse.ArgumentParser(
         prog="unpdf", description="Convert PDF files to Markdown using pymupdf4llm."
     )
     parser.add_argument("INPUT", help="PDF file or folder containing PDFs")
     parser.add_argument(
-        "-o", "--output", dest="DIR", required=True, help="Output folder (required)"
+        "-o",
+        "--output",
+        dest="output_dir",
+        required=True,
+        help="Output folder (required)",
     )
     parser.add_argument(
         "--recurse", action="store_true", help="Recursively scan subfolders"
@@ -37,16 +44,18 @@ def main() -> int:
         help="Show version information and exit",
     )
 
+    logger = setup_logging()
     args = parser.parse_args()
 
-    logger = setup_logging()
-
     input_path = Path(args.INPUT).resolve()
-    output_dir = Path(args.DIR).resolve()
+    output_dir = Path(args.output_dir).resolve()
 
     if not input_path.exists():
         logger.error(f"Input path does not exist: {args.INPUT}")
         return 1
+
+    if input_path.is_file() and args.recurse:
+        logger.warning("--recurse has no effect when INPUT is a single file.")
 
     if input_path.is_dir() and args.recurse:
         if output_dir.is_relative_to(input_path):

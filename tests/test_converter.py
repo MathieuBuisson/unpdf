@@ -9,7 +9,9 @@ from unpdf.converter import convert_pdf, ConversionResult
 def test_convert_pdf_success(mock_document, mock_to_markdown, tmp_path: Path):
     mock_to_markdown.return_value = "# Markdown Content"
     mock_doc = MagicMock()
-    mock_doc.is_encrypted = False
+    type(mock_doc).is_encrypted = False
+    mock_doc.__enter__ = lambda self: mock_doc
+    mock_doc.__exit__ = lambda self, *args: None
     mock_document.return_value = mock_doc
 
     input_pdf = tmp_path / "in.pdf"
@@ -42,6 +44,8 @@ def test_convert_pdf_existing_force(mock_document, mock_to_markdown, tmp_path: P
     mock_doc = MagicMock()
     mock_doc.is_encrypted = False
     mock_document.return_value = mock_doc
+    mock_doc.__enter__ = lambda self: mock_doc
+    mock_doc.__exit__ = lambda self, *args: None
 
     input_pdf = tmp_path / "in.pdf"
     output_md = tmp_path / "out.md"
@@ -59,6 +63,8 @@ def test_convert_pdf_encrypted_skip(mock_document, tmp_path: Path):
     mock_doc = MagicMock()
     mock_doc.is_encrypted = True
     mock_document.return_value = mock_doc
+    mock_doc.__enter__ = lambda self: mock_doc
+    mock_doc.__exit__ = lambda self, *args: None
 
     input_pdf = tmp_path / "in.pdf"
     output_md = tmp_path / "out.md"
@@ -75,6 +81,8 @@ def test_convert_pdf_corrupt(mock_document, tmp_path: Path):
     mock_doc = MagicMock()
     mock_doc.is_encrypted = False
     mock_document.return_value = mock_doc
+    mock_doc.__enter__ = lambda self: mock_doc
+    mock_doc.__exit__ = lambda self, *args: None
     import pymupdf4llm
 
     with patch(
@@ -96,6 +104,8 @@ def test_convert_pdf_error(mock_to_markdown, mock_document, tmp_path: Path):
     mock_doc = MagicMock()
     mock_doc.is_encrypted = False
     mock_document.return_value = mock_doc
+    mock_doc.__enter__ = lambda self: mock_doc
+    mock_doc.__exit__ = lambda self, *args: None
     mock_to_markdown.side_effect = Exception("Conversion Error")
 
     input_pdf = tmp_path / "in.pdf"

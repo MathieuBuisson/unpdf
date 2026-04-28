@@ -22,26 +22,29 @@ def convert_pdf(
     """
     if output_file.exists() and not force:
         logger.warning(
-            f"Skipping existing output: {output_file.name} (use --force to overwrite)"
+            f"Skipping existing output file: {output_file.name} (use --force to overwrite)"
         )
         return ConversionResult.SKIPPED
 
-    doc = pymupdf.Document(str(input_file))
-    if doc.is_encrypted:
-        logger.warning(f"Skipping encrypted PDF: {input_file.name}")
-        return ConversionResult.SKIPPED
+    with pymupdf.Document(input_file) as doc:
+        if doc.is_encrypted:
+            logger.warning(f"Skipping encrypted PDF: {input_file.name}")
+            return ConversionResult.SKIPPED
 
-    try:
-        # Convert to Markdown
-        md_text = pymupdf4llm.to_markdown(str(input_file))
+        try:
+            md_text = pymupdf4llm.to_markdown(doc)
 
-        # Create destination subdirectory if needed
-        output_file.parent.mkdir(parents=True, exist_ok=True)
+            output_file.parent.mkdir(parents=True, exist_ok=True)
 
-        # Write .md file
-        output_file.write_text(md_text, encoding="utf-8")
-        return ConversionResult.SUCCESS
+            output_file.write_text(md_text, encoding="utf-8")
+            return ConversionResult.SUCCESS
 
-    except Exception as e:
-        logger.error(f"Failed to convert {input_file.name}: {e}")
-        return ConversionResult.ERROR
+        except PermissionError as e:
+            logger.error(f"Permission denied writing to {output_file.parent}: {e}")
+            return ConversionResult.ERROR
+        except OSError as e:
+            logger.error(f"File system error: {e}")
+            return ConversionResult.ERROR
+        except Exception as e:
+            logger.error(f"Failed to convert {input_file.name}: {e}")
+            return ConversionResult.ERROR
