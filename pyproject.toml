@@ -25,6 +25,7 @@ version = {attr = "unpdf.__version__"}
 line-length = 88
 target-version = ['py313']
 include = '\.pyi?$'
+exclude = '__init__.py'
 
 [tool.pytest.ini_options]
 minversion = "7.0"
