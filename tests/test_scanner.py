@@ -46,6 +46,14 @@ def test_scan_folder_single_file(tmp_path: Path):
     assert found[0] == pdf
 
 
+def test_scan_folder_single_non_pdf_file(tmp_path: Path):
+    txt = tmp_path / "notes.txt"
+    txt.touch()
+
+    found = list(scan_folder(txt, recurse=False))
+    assert len(found) == 0
+
+
 def test_get_output_path_single_file(tmp_path: Path):
     input_file = tmp_path / "input.pdf"
     output_dir = tmp_path / "out"

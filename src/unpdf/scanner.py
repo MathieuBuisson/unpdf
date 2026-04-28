@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterator
+from collections.abc import Iterator
 
 
 def scan_folder(input_path: Path, recurse: bool) -> Iterator[Path]:
@@ -32,7 +32,7 @@ def get_output_path(input_file: Path, input_root: Path, output_dir: Path) -> Pat
     """
     Computes the output Markdown path preserving relative structure.
     """
-    if input_root == input_file or input_root.suffix.lower() == ".pdf":
+    if input_root.is_file() or input_root.suffix.lower() == ".pdf":
         # Single file case
         return output_dir / input_file.with_suffix(".md").name
 
