@@ -44,7 +44,7 @@ jobs:
     - name: Test with pytest
       run: pytest
 
-  package-and-release:
+  release:
     needs: build-and-test
     runs-on: ubuntu-latest
     permissions:
@@ -54,11 +54,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
-
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v6
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Increment version
       uses: saleweaver/version_increment_action@v1
