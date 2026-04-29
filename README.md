@@ -100,14 +100,14 @@ mypy src/ tests/          # Type checking
 bandit -r src/ tests/      # Security analysis
 ```
 
-## CI/CD
-
-GitHub Actions automatically runs tests and linting on push and pull requests.
-
-## Packaging
-
-The project is designed to be packaged into a standalone executable using PyInstaller:
+## Usage
 
 ```bash
-pyinstaller --onefile --console --clean --collect-all pymupdf --name unpdf src/unpdf/__main__.py
+# After pip install .
+unpdf document.pdf -o ./output
+
+# OR without installation
+python -m unpdf document.pdf -o ./output
 ```
+
+# Options

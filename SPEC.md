@@ -29,7 +29,6 @@ unpdf/
 | PDF Conversion | pymupdf4llm | Evaluated and selected by user |
 | Logging | logging | Standard library |
 | Path Handling | pathlib.Path | Modern, cross-platform |
-| Packaging | PyInstaller | Single executable distribution |
 
 ---
 
@@ -205,24 +204,6 @@ If more than one file is processed, emit a final INFO summary.
 |------|---------|
 | `0` | Success |
 | `1` | Fatal startup or configuration error |
-
----
-
-## 11. Packaging
-
-```bash
-pyinstaller \
-    --onefile \
-    --console \
-    --clean \
-    --collect-all pymupdf \
-    --name unpdf \
-    src/unpdf/__main__.py
-```
-
-Produces a standalone `unpdf.exe`.
-
-> `--collect-all pymupdf` is required because PyMuPDF includes native extensions and resource files that PyInstaller cannot always detect automatically.
 
 ---
 
